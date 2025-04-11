@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Fuel Calculator</string>
+
+    <string-array name="colorThemes">
+        <item>White</item>
+        <item>Black</item>
+        <item>Red</item>
+        <item>Blue</item>
+    </string-array>
+
+    <string name="invalid_input">Please enter valid input</string>
+    <string name="total_fuel_cost">Total fuel cost is %1$s€</string>
+    <string name="font_size_text">Change font size:</string>
+    <string name="background_text">Change Background Color:</string>
+    <string name="hint_distance">Distance (km)</string>
+    <string name="hint_consumption">Consumption (L/100km)</string>
+    <string name="hint_price">Fuel price (€/L)</string>
+    <string name="button_calculate">Calculate</string>
+    <string name="text_result_default">Total fuel cost</string>
+
+
+
+</resources>

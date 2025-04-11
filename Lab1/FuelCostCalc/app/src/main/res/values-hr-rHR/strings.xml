@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kalkulator goriva</string>
+    <string name="hint_distance">Udaljenost (km)</string>
+    <string name="hint_consumption">Potrošnja (L/100km)</string>
+    <string name="hint_price">Cijena goriva (€/L)</string>
+    <string name="button_calculate">Izračunaj</string>
+    <string name="text_result_default">Ukupna cijena goriva</string>
+    <string name="invalid_input">Molimo unesite ispravne vrijednosti</string>
+    <string name="total_fuel_cost">Ukupni trošak goriva je %1$s€</string>
+    <string name="font_size_text">Promjeni velicinu fonta:</string>
+    <string name="background_text">Promjeni boju pozadine:</string>
+
+    <string-array name="colorThemes">
+        <item>Bijela</item>
+        <item>Crna</item>
+        <item>Crvena</item>
+        <item>Plava</item>
+    </string-array>
+</resources>
