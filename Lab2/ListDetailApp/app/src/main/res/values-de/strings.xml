@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AutoAusstellung</string>
+    <string name="car_name">Autoname</string>
+    <string name="car_image">Auto Bild</string>
+    <string name="car_brand">Marke</string>
+    <string name="car_year">Jahr</string>
+    <string name="car_description">Beschreibung</string>
+    <string name="open_website">Website öffnen</string>
+    <string name="share">Teilen</string>
+    <string name="confirm_share">Möchten Sie dieses Auto teilen?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+</resources>

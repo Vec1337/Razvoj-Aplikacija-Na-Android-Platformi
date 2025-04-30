@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Base.Theme.ListDetailApp" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <item name="android:colorBackground">@color/white</item>
+
+        <item name="android:buttonStyle">@style/CustomButtonStyle</item>
+
+        <item name="android:textViewStyle">@style/CustomTextStyle</item>
+    </style>
+
+    <style name="Theme.ListDetailApp" parent="Base.Theme.ListDetailApp" />
+</resources>

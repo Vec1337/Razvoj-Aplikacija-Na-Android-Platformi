@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AutoIzlozba</string>
+    <string name="car_name">Naziv automobila</string>
+    <string name="car_image">Slika Automobila</string>
+    <string name="car_brand">Marka</string>
+    <string name="car_year">Godina</string>
+    <string name="car_description">Opis</string>
+    <string name="open_website">Otvori web stranicu</string>
+    <string name="share">Podijeli</string>
+    <string name="confirm_share">Želite li podijeliti ovaj automobil?</string>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+
+</resources>
