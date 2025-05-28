@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Calculadora de Combustible</string>
+    <string-array name="colorThemes">
+        <item>Blanco</item>
+        <item>Negro</item>
+        <item>Rojo</item>
+        <item>Azul</item>
+    </string-array>
+
+    <string name="invalid_input">Por favor, ingrese un valor válido</string>
+    <string name="total_fuel_cost">El costo total del combustible es %1$s€</string>
+    <string name="font_size_text">Cambiar tamaño de fuente:</string>
+    <string name="background_text">Cambiar color de fondo:</string>
+    <string name="hint_distance">Distancia (km)</string>
+    <string name="hint_consumption">Consumo (L/100km)</string>
+    <string name="hint_price">Precio del combustible (€/L)</string>
+    <string name="button_calculate">Calcular</string>
+    <string name="text_result_default">Costo total del combustible</string>
+</resources>
