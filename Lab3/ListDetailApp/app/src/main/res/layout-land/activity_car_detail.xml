@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <!-- Lijevo: Slika -->
+    <ImageView
+        android:id="@+id/imageCarDetail"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/car_image" />
+
+    <!-- Desno: Tekst + gumb -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <TextView
+                android:id="@+id/textCarNameDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:text="@string/car_name"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/textCarBrandDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="@string/car_brand"
+                android:paddingBottom="4dp" />
+
+            <TextView
+                android:id="@+id/textCarYearDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="@string/car_year"
+                android:paddingBottom="12dp" />
+
+            <TextView
+                android:id="@+id/textCarDescriptionDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="@string/car_description"
+                android:paddingBottom="24dp" />
+
+            <Button
+                android:id="@+id/buttonWebsite"
+                style="@style/CustomButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/open_website"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

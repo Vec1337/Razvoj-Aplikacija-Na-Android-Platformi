@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:layout_marginBottom="20dp"/>
+
+        <ImageView
+            android:id="@+id/imageCarDetail"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/car_image" />
+
+        <TextView
+            style="@style/CustomTextStyle"
+            android:id="@+id/textCarNameDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:text="@string/car_name" />
+
+        <TextView
+            android:id="@+id/textCarBrandDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:paddingTop="8dp"
+            android:text="@string/car_brand" />
+
+        <TextView
+            android:id="@+id/textCarYearDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:paddingTop="8dp"
+            android:text="@string/car_year" />
+
+        <TextView
+            android:id="@+id/textCarDescriptionDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:paddingTop="16dp"
+            android:text="@string/car_description"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/buttonWebsite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/open_website"
+            style="@style/CustomButtonStyle"/>
+
+    </LinearLayout>
+</ScrollView>
