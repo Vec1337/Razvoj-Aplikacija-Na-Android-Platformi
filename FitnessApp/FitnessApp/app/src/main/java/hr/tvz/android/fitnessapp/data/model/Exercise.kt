@@ -15,7 +15,7 @@ import androidx.room.ForeignKey
 )
 data class Exercise(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val workoutId: Int,
+    val workoutId: Long,
     val name: String,
     val sets: Int,
     val reps: Int

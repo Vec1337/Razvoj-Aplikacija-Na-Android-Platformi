@@ -6,22 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import hr.tvz.android.fitnessapp.data.db.AppDatabase
+import hr.tvz.android.fitnessapp.data.model.Workout
 import hr.tvz.android.fitnessapp.data.repository.WorkoutRepository
 import hr.tvz.android.fitnessapp.databinding.FragmentAddWorkoutBinding
+import kotlinx.coroutines.launch
 
 class AddWorkoutFragment : Fragment() {
 
     private var _binding: FragmentAddWorkoutBinding? = null
     private val binding get() = _binding!!
 
-    // repository i ViewModel inicijaliziramo s DAO-om iz baze
-    private val viewModel: AddWorkoutViewModel by viewModels {
-        val dao = AppDatabase.getDatabase(requireContext()).workoutDao()
-        val repository = WorkoutRepository(dao)
-        AddWorkoutViewModelFactory(repository)
-    }
+    private lateinit var repository: WorkoutRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,18 +31,22 @@ class AddWorkoutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonAddWorkout.setOnClickListener {
-            val name = binding.editTextWorkoutName.text.toString()
-            val durationText = binding.editTextWorkoutDuration.text.toString()
+        repository = WorkoutRepository(AppDatabase.getDatabase(requireContext()).workoutDao())
 
-            if (name.isNotEmpty() && durationText.isNotEmpty()) {
-                val duration = durationText.toInt()
-                viewModel.addWorkout(name, duration)
-                Toast.makeText(requireContext(), "Workout added!", Toast.LENGTH_SHORT).show()
-                binding.editTextWorkoutName.text.clear()
-                binding.editTextWorkoutDuration.text.clear()
+        binding.buttonSaveWorkout.setOnClickListener {
+            val name = binding.editTextWorkoutName.text.toString()
+            val duration = binding.editTextWorkoutTime.text.toString().toIntOrNull() ?: 0
+
+            if (name.isNotBlank() && duration > 0) {
+                val workout = Workout(name = name, duration = duration)
+
+                // Launch a coroutine to call the suspend function
+                lifecycleScope.launch {
+                    repository.insert(workout)
+                    parentFragmentManager.popBackStack() // Close fragment after saving
+                }
             } else {
-                Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Enter valid values", Toast.LENGTH_SHORT).show()
             }
         }
     }

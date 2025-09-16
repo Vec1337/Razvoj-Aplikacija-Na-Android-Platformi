@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import hr.tvz.android.fitnessapp.R
 import hr.tvz.android.fitnessapp.data.db.AppDatabase
+import hr.tvz.android.fitnessapp.data.model.Workout
 import hr.tvz.android.fitnessapp.data.repository.WorkoutRepository
 import hr.tvz.android.fitnessapp.databinding.FragmentHomeBinding
-import hr.tvz.android.fitnessapp.ui.add.AddWorkoutFragment
 import hr.tvz.android.fitnessapp.ui.home.adapter.WorkoutAdapter
+import hr.tvz.android.fitnessapp.ui.workoutdetail.WorkoutDetailFragment
+import hr.tvz.android.fitnessapp.ui.add.AddWorkoutFragment
 
 class HomeFragment : Fragment() {
 
@@ -20,7 +22,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: WorkoutAdapter
-    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var repository: WorkoutRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,26 +35,36 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize repository and ViewModel safely
-        val repository = WorkoutRepository(AppDatabase.getDatabase(requireContext()).workoutDao())
-        homeViewModel = HomeViewModelFactory(repository).create(HomeViewModel::class.java)
+        // Initialize repository
+        repository = WorkoutRepository(AppDatabase.getDatabase(requireContext()).workoutDao())
+
+        // Initialize adapter with click listener
+        adapter = WorkoutAdapter(emptyList()) { workout ->
+            openWorkoutDetail(workout)
+        }
 
         // Setup RecyclerView
-        adapter = WorkoutAdapter(emptyList())
         binding.recyclerViewHome.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewHome.adapter = adapter
 
-        // Observe database changes
-        homeViewModel.workouts.observe(viewLifecycleOwner, Observer { workouts ->
+        // Observe workouts
+        repository.allWorkouts.observe(viewLifecycleOwner) { workouts ->
             adapter.updateData(workouts)
-        })
+        }
 
-        // Button to add new workout
+        // Add workout button
         binding.buttonAddWorkout.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, AddWorkoutFragment())
-                .addToBackStack(null)
-                .commit()
+            parentFragmentManager.commit {
+                replace(R.id.fragment_container, AddWorkoutFragment())
+                addToBackStack(null)
+            }
+        }
+    }
+
+    private fun openWorkoutDetail(workout: Workout) {
+        parentFragmentManager.commit {
+            replace(R.id.fragment_container, WorkoutDetailFragment(workout.id.toLong(), workout.name))
+            addToBackStack(null)
         }
     }
 

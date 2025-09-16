@@ -8,7 +8,7 @@ import hr.tvz.android.fitnessapp.data.model.Exercise
 interface ExerciseDao {
 
     @Query("SELECT * FROM exercise WHERE workoutId = :workoutId")
-    fun getExercisesForWorkout(workoutId: Int): LiveData<List<Exercise>>
+    fun getExercisesByWorkoutId(workoutId: Long): LiveData<List<Exercise>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(exercise: Exercise)

@@ -2,28 +2,29 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/editTextWorkoutName"
+        android:hint="Workout Name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Workout Name" />
+        android:layout_height="wrap_content"/>
 
     <EditText
-        android:id="@+id/editTextWorkoutDuration"
+        android:id="@+id/editTextWorkoutTime"
+        android:hint="Duration (minutes)"
+        android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Duration (minutes)"
-        android:inputType="number" />
+        android:layout_marginTop="8dp"/>
 
     <Button
-        android:id="@+id/buttonAddWorkout"
+        android:id="@+id/buttonSaveWorkout"
+        android:text="Save Workout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Workout" />
+        android:layout_marginTop="16dp"/>
 
 </LinearLayout>
-

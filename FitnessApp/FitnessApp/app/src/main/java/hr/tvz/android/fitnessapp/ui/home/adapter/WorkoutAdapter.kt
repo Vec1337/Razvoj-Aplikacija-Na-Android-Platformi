@@ -1,37 +1,35 @@
 package hr.tvz.android.fitnessapp.ui.home.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import hr.tvz.android.fitnessapp.R
 import hr.tvz.android.fitnessapp.data.model.Workout
-import hr.tvz.android.fitnessapp.databinding.ItemWorkoutBinding
 
-class WorkoutAdapter(private var workouts: List<Workout>) :
-    RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
+class WorkoutAdapter(
+    private var workouts: List<Workout>,
+    private val onClick: (Workout) -> Unit
+) : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
 
-    inner class WorkoutViewHolder(private val binding: ItemWorkoutBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(workout: Workout) {
-            binding.textViewWorkoutName.text = workout.name
-            binding.textViewWorkoutDuration.text = "${workout.duration} min"
-        }
+    inner class WorkoutViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val nameText: TextView = itemView.findViewById(R.id.textViewWorkoutName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
-        val binding = ItemWorkoutBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return WorkoutViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
-        holder.bind(workouts[position])
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_workout, parent, false)
+        return WorkoutViewHolder(view)
     }
 
     override fun getItemCount(): Int = workouts.size
+
+    override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
+        val workout = workouts[position]
+        holder.nameText.text = workout.name
+        holder.itemView.setOnClickListener { onClick(workout) }
+    }
 
     fun updateData(newWorkouts: List<Workout>) {
         workouts = newWorkouts

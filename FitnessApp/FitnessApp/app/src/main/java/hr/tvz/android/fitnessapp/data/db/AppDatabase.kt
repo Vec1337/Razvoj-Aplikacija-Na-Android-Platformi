@@ -9,8 +9,7 @@ import hr.tvz.android.fitnessapp.data.db.WorkoutDao
 import hr.tvz.android.fitnessapp.data.model.Exercise
 import hr.tvz.android.fitnessapp.data.model.Workout
 
-// Room database with Workout and Exercise entities
-@Database(entities = [Workout::class, Exercise::class], version = 2, exportSchema = false)
+@Database(entities = [Workout::class, Exercise::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun workoutDao(): WorkoutDao
@@ -26,10 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "fitness_database"
-                )
-                    // Optional: fallback to destructive migration for simplicity (resets DB on version change)
-                    .fallbackToDestructiveMigration()
-                    .build()
+                ).build()
                 INSTANCE = instance
                 instance
             }
