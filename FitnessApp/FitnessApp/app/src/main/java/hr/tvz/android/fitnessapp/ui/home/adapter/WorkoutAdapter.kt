@@ -13,8 +13,14 @@ class WorkoutAdapter(
     private val onClick: (Workout) -> Unit
 ) : RecyclerView.Adapter<WorkoutAdapter.WorkoutViewHolder>() {
 
+    // Expose current list for swipe-to-delete
+    val currentList: List<Workout>
+        get() = workouts
+
     inner class WorkoutViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameText: TextView = itemView.findViewById(R.id.textViewWorkoutName)
+        val exercisesText: TextView = itemView.findViewById(R.id.textViewWorkoutExercises)
+        val durationText: TextView = itemView.findViewById(R.id.textViewWorkoutDuration)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutViewHolder {
@@ -28,6 +34,8 @@ class WorkoutAdapter(
     override fun onBindViewHolder(holder: WorkoutViewHolder, position: Int) {
         val workout = workouts[position]
         holder.nameText.text = workout.name
+        holder.exercisesText.text = "Exercises: ${workout.exerciseCount}"
+        holder.durationText.text = "Duration: ${workout.duration} min"
         holder.itemView.setOnClickListener { onClick(workout) }
     }
 

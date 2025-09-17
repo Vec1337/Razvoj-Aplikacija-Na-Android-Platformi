@@ -7,5 +7,8 @@ import androidx.room.PrimaryKey
 data class Workout(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val duration: Int // trajanje u minutama
+    val duration: Int,
+    var exerciseCount: Int = 0
+
+
 )
