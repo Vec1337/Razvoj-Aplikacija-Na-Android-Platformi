@@ -96,7 +96,7 @@ class HomeFragment : Fragment() {
         // Add workout button
         binding.buttonAddWorkout.setOnClickListener {
             parentFragmentManager.commit {
-                replace(R.id.fragment_container, AddWorkoutFragment())
+                replace(R.id.nav_host_fragment, AddWorkoutFragment())
                 addToBackStack(null)
             }
         }
@@ -104,7 +104,7 @@ class HomeFragment : Fragment() {
 
     private fun openWorkoutDetail(workout: Workout) {
         parentFragmentManager.commit {
-            replace(R.id.fragment_container, WorkoutDetailFragment(workout.id.toLong(), workout.name))
+            replace(R.id.nav_host_fragment, WorkoutDetailFragment(workout.id.toLong(), workout.name))
             addToBackStack(null)
         }
     }
