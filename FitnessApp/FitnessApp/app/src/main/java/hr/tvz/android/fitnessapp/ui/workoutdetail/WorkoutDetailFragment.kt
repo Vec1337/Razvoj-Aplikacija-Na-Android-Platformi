@@ -11,17 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.fragment.navArgs
 import hr.tvz.android.fitnessapp.R
 import hr.tvz.android.fitnessapp.data.db.AppDatabase
 import hr.tvz.android.fitnessapp.data.model.Exercise
-import hr.tvz.android.fitnessapp.data.model.Workout
 import hr.tvz.android.fitnessapp.data.repository.ExerciseRepository
 import hr.tvz.android.fitnessapp.data.repository.WorkoutRepository
 import hr.tvz.android.fitnessapp.databinding.FragmentWorkoutDetailBinding
 import hr.tvz.android.fitnessapp.ui.workoutdetail.adapter.ExerciseAdapter
 import kotlinx.coroutines.launch
 
-class WorkoutDetailFragment(private val workoutId: Long, private val workoutName: String) : Fragment() {
+class WorkoutDetailFragment : Fragment() {
 
     private var _binding: FragmentWorkoutDetailBinding? = null
     private val binding get() = _binding!!
@@ -40,6 +40,9 @@ class WorkoutDetailFragment(private val workoutId: Long, private val workoutName
         WorkoutDetailViewModelFactory(exerciseRepository)
     }
 
+    // ✅ Safe Args
+    private val args: WorkoutDetailFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -50,6 +53,9 @@ class WorkoutDetailFragment(private val workoutId: Long, private val workoutName
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val workoutId = args.workoutId
+        val workoutName = args.workoutName
 
         binding.textViewWorkoutName.text = workoutName
 
@@ -64,11 +70,11 @@ class WorkoutDetailFragment(private val workoutId: Long, private val workoutName
         }
 
         binding.buttonAddExercise.setOnClickListener {
-            showAddExerciseDialog()
+            showAddExerciseDialog(workoutId)
         }
     }
 
-    private fun showAddExerciseDialog() {
+    private fun showAddExerciseDialog(workoutId: Long) {
         val dialogView = LayoutInflater.from(requireContext())
             .inflate(R.layout.dialog_add_exercise, null)
 
@@ -97,10 +103,10 @@ class WorkoutDetailFragment(private val workoutId: Long, private val workoutName
 
                     // Update exerciseCount in the corresponding workout
                     lifecycleScope.launch {
-                        // Get the current workout directly from the DB
                         val workout = workoutRepository.getWorkoutById(workoutId)
                         if (workout != null) {
-                            val updatedWorkout = workout.copy(exerciseCount = workout.exerciseCount + 1)
+                            val updatedWorkout =
+                                workout.copy(exerciseCount = workout.exerciseCount + 1)
                             workoutRepository.update(updatedWorkout)
                         }
                     }
@@ -112,7 +118,6 @@ class WorkoutDetailFragment(private val workoutId: Long, private val workoutName
             .setNegativeButton("Cancel", null)
             .show()
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

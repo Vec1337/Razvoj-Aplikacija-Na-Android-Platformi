@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,8 +17,6 @@ import hr.tvz.android.fitnessapp.data.model.Workout
 import hr.tvz.android.fitnessapp.data.repository.WorkoutRepository
 import hr.tvz.android.fitnessapp.databinding.FragmentHomeBinding
 import hr.tvz.android.fitnessapp.ui.home.adapter.WorkoutAdapter
-import hr.tvz.android.fitnessapp.ui.workoutdetail.WorkoutDetailFragment
-import hr.tvz.android.fitnessapp.ui.add.AddWorkoutFragment
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -63,10 +61,11 @@ class HomeFragment : Fragment() {
                 binding.textViewEmpty.visibility = View.GONE
                 binding.recyclerViewHome.visibility = View.VISIBLE
             }
-    }
+        }
 
         // Swipe-to-delete
-        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val itemTouchHelper = ItemTouchHelper(object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -93,20 +92,17 @@ class HomeFragment : Fragment() {
         })
         itemTouchHelper.attachToRecyclerView(binding.recyclerViewHome)
 
-        // Add workout button
+        // Add workout button (empty state) -> use GLOBAL nav action
         binding.buttonAddWorkout.setOnClickListener {
-            parentFragmentManager.commit {
-                replace(R.id.nav_host_fragment, AddWorkoutFragment())
-                addToBackStack(null)
-            }
+            findNavController().navigate(R.id.action_global_addWorkoutFragment)
         }
     }
 
     private fun openWorkoutDetail(workout: Workout) {
-        parentFragmentManager.commit {
-            replace(R.id.nav_host_fragment, WorkoutDetailFragment(workout.id.toLong(), workout.name))
-            addToBackStack(null)
-        }
+        // Navigate with Safe Args
+        val action = HomeFragmentDirections
+            .actionHomeFragmentToWorkoutDetailFragment(workout.id.toLong(), workout.name)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
