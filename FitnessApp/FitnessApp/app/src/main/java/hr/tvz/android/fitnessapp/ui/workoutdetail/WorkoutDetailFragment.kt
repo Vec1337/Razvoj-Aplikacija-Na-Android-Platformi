@@ -10,12 +10,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import hr.tvz.android.fitnessapp.R
 import hr.tvz.android.fitnessapp.data.db.AppDatabase
 import hr.tvz.android.fitnessapp.data.model.Exercise
+import hr.tvz.android.fitnessapp.data.model.WorkoutLog
 import hr.tvz.android.fitnessapp.data.repository.ExerciseRepository
+import hr.tvz.android.fitnessapp.data.repository.WorkoutLogRepository
 import hr.tvz.android.fitnessapp.data.repository.WorkoutRepository
 import hr.tvz.android.fitnessapp.databinding.FragmentWorkoutDetailBinding
 import hr.tvz.android.fitnessapp.ui.workoutdetail.adapter.ExerciseAdapter
@@ -36,11 +40,14 @@ class WorkoutDetailFragment : Fragment() {
         WorkoutRepository(AppDatabase.getDatabase(requireContext()).workoutDao())
     }
 
+    private val workoutLogRepository by lazy {
+        WorkoutLogRepository(AppDatabase.getDatabase(requireContext()).workoutLogDao())
+    }
+
     private val viewModel: WorkoutDetailViewModel by viewModels {
         WorkoutDetailViewModelFactory(exerciseRepository)
     }
 
-    // ✅ Safe Args
     private val args: WorkoutDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -64,13 +71,77 @@ class WorkoutDetailFragment : Fragment() {
         binding.recyclerViewExercises.adapter = adapter
 
         viewModel.setWorkoutId(workoutId)
-
         viewModel.exercises.observe(viewLifecycleOwner) { exercises ->
             adapter.updateData(exercises)
         }
 
+        // Swipe-to-delete for exercises
+        val itemTouchHelper = ItemTouchHelper(object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+            override fun onMove(
+                recyclerView: androidx.recyclerview.widget.RecyclerView,
+                viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                target: androidx.recyclerview.widget.RecyclerView.ViewHolder
+            ): Boolean = false
+
+            override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val exerciseToDelete = adapter.exercises[position]
+
+                // Delete exercise
+                lifecycleScope.launch {
+                    exerciseRepository.delete(exerciseToDelete)
+
+                    // Update exercise count in workout
+                    val workout = workoutRepository.getWorkoutById(workoutId)
+                    if (workout != null) {
+                        val updatedWorkout = workout.copy(
+                            exerciseCount = (workout.exerciseCount - 1).coerceAtLeast(0)
+                        )
+                        workoutRepository.update(updatedWorkout)
+                    }
+                }
+
+                // Undo Snackbar
+                Snackbar.make(binding.root, "Exercise deleted", Snackbar.LENGTH_LONG)
+                    .setAnchorView(R.id.bottom_navigation)
+                    .setAction("UNDO") {
+                        lifecycleScope.launch {
+                            exerciseRepository.insert(exerciseToDelete)
+
+                            val workout = workoutRepository.getWorkoutById(workoutId)
+                            if (workout != null) {
+                                val restoredWorkout =
+                                    workout.copy(exerciseCount = workout.exerciseCount + 1)
+                                workoutRepository.update(restoredWorkout)
+                            }
+                        }
+                    }
+                    .show()
+            }
+        })
+        itemTouchHelper.attachToRecyclerView(binding.recyclerViewExercises)
+
         binding.buttonAddExercise.setOnClickListener {
             showAddExerciseDialog(workoutId)
+        }
+
+        binding.buttonCompleteWorkout.setOnClickListener {
+            lifecycleScope.launch {
+                val workout = workoutRepository.getWorkoutById(workoutId)
+                if (workout != null) {
+                    val log = WorkoutLog(
+                        workoutId = workoutId,
+                        workoutName = workout.name,
+                        duration = workout.duration
+                    )
+                    workoutLogRepository.insert(log)
+                    Toast.makeText(requireContext(), "Workout logged!", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "Workout not found", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -98,10 +169,8 @@ class WorkoutDetailFragment : Fragment() {
                         reps = reps
                     )
 
-                    // Add exercise to DB
                     viewModel.addExercise(exercise)
 
-                    // Update exerciseCount in the corresponding workout
                     lifecycleScope.launch {
                         val workout = workoutRepository.getWorkoutById(workoutId)
                         if (workout != null) {
@@ -110,7 +179,6 @@ class WorkoutDetailFragment : Fragment() {
                             workoutRepository.update(updatedWorkout)
                         }
                     }
-
                 } else {
                     Toast.makeText(requireContext(), "Enter valid values", Toast.LENGTH_SHORT).show()
                 }

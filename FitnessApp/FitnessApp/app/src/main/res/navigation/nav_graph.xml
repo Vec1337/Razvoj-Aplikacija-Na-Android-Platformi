@@ -53,4 +53,12 @@
         android:id="@+id/action_global_addWorkoutFragment"
         app:destination="@id/addWorkoutFragment" />
 
+
+    <fragment
+        android:id="@+id/workoutHistoryFragment"
+        android:name="hr.tvz.android.fitnessapp.ui.history.WorkoutHistoryFragment"
+        android:label="History"
+        tools:layout="@layout/fragment_workout_history" />
+
+
 </navigation>

@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import hr.tvz.android.fitnessapp.MainActivity
 import hr.tvz.android.fitnessapp.databinding.FragmentSettingsBinding
 import hr.tvz.android.fitnessapp.notifications.ReminderReceiver
 import hr.tvz.android.fitnessapp.notifications.ReminderScheduler
@@ -36,6 +37,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // --- Reminder Button ---
         binding.buttonSetReminder.setOnClickListener {
             checkNotificationPermission()
         }
@@ -45,8 +47,26 @@ class SettingsFragment : Fragment() {
             ReminderReceiver().onReceive(requireContext(), intent)
             Toast.makeText(requireContext(), "Test notification sent!", Toast.LENGTH_SHORT).show()
         }
+
+        // --- Music Switch ---
+        val prefs = requireContext().getSharedPreferences("prefs", 0)
+        val musicEnabled = prefs.getBoolean("musicEnabled", true)
+        binding.switchMusic.isChecked = musicEnabled
+
+        binding.switchMusic.setOnCheckedChangeListener { _, isChecked ->
+            val mainActivity = activity as? MainActivity
+            if (isChecked) {
+                mainActivity?.mediaPlayer?.start()
+            } else {
+                mainActivity?.mediaPlayer?.pause()
+            }
+
+            // Save preference
+            prefs.edit().putBoolean("musicEnabled", isChecked).apply()
+        }
     }
 
+    // --- Notification Permission Handling ---
     private fun checkNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
@@ -96,8 +116,6 @@ class SettingsFragment : Fragment() {
             }
         }
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()

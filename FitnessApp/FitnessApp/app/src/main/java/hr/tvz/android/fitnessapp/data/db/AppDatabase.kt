@@ -8,12 +8,14 @@ import hr.tvz.android.fitnessapp.data.db.ExerciseDao
 import hr.tvz.android.fitnessapp.data.db.WorkoutDao
 import hr.tvz.android.fitnessapp.data.model.Exercise
 import hr.tvz.android.fitnessapp.data.model.Workout
+import hr.tvz.android.fitnessapp.data.model.WorkoutLog
 
-@Database(entities = [Workout::class, Exercise::class], version = 1, exportSchema = false)
+@Database(entities = [Workout::class, Exercise::class, WorkoutLog::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun workoutDao(): WorkoutDao
     abstract fun exerciseDao(): ExerciseDao
+    abstract fun workoutLogDao(): WorkoutLogDao
 
     companion object {
         @Volatile
@@ -25,10 +27,14 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "fitness_database"
-                ).build()
+                )
+                    // Optional: fallbackToDestructiveMigration allows DB to reset if no migration provided
+                    .fallbackToDestructiveMigration()
+                    .build()
                 INSTANCE = instance
                 instance
             }
         }
     }
 }
+

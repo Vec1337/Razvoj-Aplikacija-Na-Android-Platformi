@@ -9,13 +9,17 @@ import hr.tvz.android.fitnessapp.R
 import hr.tvz.android.fitnessapp.data.model.Exercise
 
 class ExerciseAdapter(
-    private var exercises: List<Exercise>
+    var exercises: List<Exercise>
 ) : RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
 
     inner class ExerciseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameText: TextView = itemView.findViewById(R.id.textViewExerciseName)
         val setsRepsText: TextView = itemView.findViewById(R.id.textViewSetsReps)
     }
+
+    // Expose the current list for swipe-to-delete
+    val currentList: List<Exercise>
+        get() = exercises
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseViewHolder {
         val view = LayoutInflater.from(parent.context)

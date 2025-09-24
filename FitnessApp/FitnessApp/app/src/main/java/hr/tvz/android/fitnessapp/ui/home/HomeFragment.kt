@@ -9,8 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import hr.tvz.android.fitnessapp.R
 import hr.tvz.android.fitnessapp.data.db.AppDatabase
 import hr.tvz.android.fitnessapp.data.model.Workout
@@ -63,16 +63,16 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Swipe-to-delete
+        // Swipe-to-delete with anchored Snackbar
         val itemTouchHelper = ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
+                recyclerView: androidx.recyclerview.widget.RecyclerView,
+                viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                target: androidx.recyclerview.widget.RecyclerView.ViewHolder
             ): Boolean = false
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val workoutToDelete = adapter.currentList[position]
 
@@ -81,8 +81,9 @@ class HomeFragment : Fragment() {
                     repository.delete(workoutToDelete)
                 }
 
-                // Show Undo Snackbar
-                Snackbar.make(binding.root, "Workout deleted", Snackbar.LENGTH_LONG)
+                // Show Undo Snackbar anchored above BottomNavigationView
+                Snackbar.make(requireView(), "Workout deleted", Snackbar.LENGTH_LONG)
+                    .setAnchorView(R.id.bottom_navigation) // pass resource ID to avoid ambiguity
                     .setAction("UNDO") {
                         lifecycleScope.launch {
                             repository.insert(workoutToDelete)
@@ -91,11 +92,6 @@ class HomeFragment : Fragment() {
             }
         })
         itemTouchHelper.attachToRecyclerView(binding.recyclerViewHome)
-
-        // Add workout button (empty state) -> use GLOBAL nav action
-        binding.buttonAddWorkout.setOnClickListener {
-            findNavController().navigate(R.id.action_global_addWorkoutFragment)
-        }
     }
 
     private fun openWorkoutDetail(workout: Workout) {

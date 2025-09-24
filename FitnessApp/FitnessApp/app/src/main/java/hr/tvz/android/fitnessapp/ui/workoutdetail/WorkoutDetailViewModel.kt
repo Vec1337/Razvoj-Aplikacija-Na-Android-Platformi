@@ -21,7 +21,17 @@ class WorkoutDetailViewModel(private val repository: ExerciseRepository) : ViewM
         viewModelScope.launch {
             repository.insert(exercise)
         }
+
+
     }
+
+    fun deleteExercise(exercise: Exercise) {
+        viewModelScope.launch {
+            repository.delete(exercise)
+        }
+    }
+
+
 }
 
 class WorkoutDetailViewModelFactory(private val repository: ExerciseRepository) : ViewModelProvider.Factory {
