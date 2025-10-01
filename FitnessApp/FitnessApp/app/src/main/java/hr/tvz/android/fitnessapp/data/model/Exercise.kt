@@ -18,5 +18,6 @@ data class Exercise(
     val workoutId: Long,
     val name: String,
     val sets: Int,
-    val reps: Int
+    val reps: Int,
+    val isCompleted: Boolean = false
 )

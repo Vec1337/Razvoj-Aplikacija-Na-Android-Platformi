@@ -75,7 +75,20 @@ class WorkoutDetailFragment : Fragment() {
             adapter.updateData(exercises)
         }
 
-        // Swipe-to-delete for exercises
+        // 🔹 Long-press edit exercise
+        adapter.onExerciseLongClick = { exercise ->
+            showEditExerciseDialog(exercise)
+        }
+
+        // 🔹 Click exercise → toggle completed
+        adapter.onExerciseClick = { exercise ->
+            val toggledExercise = exercise.copy(isCompleted = !exercise.isCompleted)
+            lifecycleScope.launch {
+                exerciseRepository.update(toggledExercise)
+            }
+        }
+
+        // 🔹 Swipe-to-delete for exercises
         val itemTouchHelper = ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -89,11 +102,9 @@ class WorkoutDetailFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 val exerciseToDelete = adapter.exercises[position]
 
-                // Delete exercise
                 lifecycleScope.launch {
                     exerciseRepository.delete(exerciseToDelete)
 
-                    // Update exercise count in workout
                     val workout = workoutRepository.getWorkoutById(workoutId)
                     if (workout != null) {
                         val updatedWorkout = workout.copy(
@@ -103,7 +114,6 @@ class WorkoutDetailFragment : Fragment() {
                     }
                 }
 
-                // Undo Snackbar
                 Snackbar.make(binding.root, "Exercise deleted", Snackbar.LENGTH_LONG)
                     .setAnchorView(R.id.bottom_navigation)
                     .setAction("UNDO") {
@@ -131,12 +141,20 @@ class WorkoutDetailFragment : Fragment() {
             lifecycleScope.launch {
                 val workout = workoutRepository.getWorkoutById(workoutId)
                 if (workout != null) {
+                    // ✅ Log workout
                     val log = WorkoutLog(
                         workoutId = workoutId,
                         workoutName = workout.name,
                         duration = workout.duration
                     )
                     workoutLogRepository.insert(log)
+
+                    // ✅ Reset all exercises to uncompleted
+                    val exercises = exerciseRepository.getExercisesByWorkoutIdSync(workoutId)
+                    exercises.forEach { ex ->
+                        exerciseRepository.update(ex.copy(isCompleted = false))
+                    }
+
                     Toast.makeText(requireContext(), "Workout logged!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(requireContext(), "Workout not found", Toast.LENGTH_SHORT).show()
@@ -166,7 +184,8 @@ class WorkoutDetailFragment : Fragment() {
                         workoutId = workoutId,
                         name = name,
                         sets = sets,
-                        reps = reps
+                        reps = reps,
+                        isCompleted = false
                     )
 
                     viewModel.addExercise(exercise)
@@ -178,6 +197,40 @@ class WorkoutDetailFragment : Fragment() {
                                 workout.copy(exerciseCount = workout.exerciseCount + 1)
                             workoutRepository.update(updatedWorkout)
                         }
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Enter valid values", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showEditExerciseDialog(exercise: Exercise) {
+        val dialogView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.dialog_add_exercise, null)
+
+        val nameEdit = dialogView.findViewById<EditText>(R.id.editTextExerciseName)
+        val setsEdit = dialogView.findViewById<EditText>(R.id.editTextSets)
+        val repsEdit = dialogView.findViewById<EditText>(R.id.editTextReps)
+
+        // Pre-fill existing values
+        nameEdit.setText(exercise.name)
+        setsEdit.setText(exercise.sets.toString())
+        repsEdit.setText(exercise.reps.toString())
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Edit Exercise")
+            .setView(dialogView)
+            .setPositiveButton("Save") { _, _ ->
+                val name = nameEdit.text.toString()
+                val sets = setsEdit.text.toString().toIntOrNull() ?: 0
+                val reps = repsEdit.text.toString().toIntOrNull() ?: 0
+
+                if (name.isNotBlank() && sets > 0 && reps > 0) {
+                    val updatedExercise = exercise.copy(name = name, sets = sets, reps = reps)
+                    lifecycleScope.launch {
+                        exerciseRepository.update(updatedExercise)
                     }
                 } else {
                     Toast.makeText(requireContext(), "Enter valid values", Toast.LENGTH_SHORT).show()

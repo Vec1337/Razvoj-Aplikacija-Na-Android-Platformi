@@ -18,4 +18,8 @@ interface ExerciseDao {
 
     @Delete
     suspend fun delete(exercise: Exercise)
+
+    @Query("SELECT * FROM exercise WHERE workoutId = :workoutId")
+    suspend fun getExercisesByWorkoutIdSync(workoutId: Long): List<Exercise>
+
 }

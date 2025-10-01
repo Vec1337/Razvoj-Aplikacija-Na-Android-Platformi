@@ -25,4 +25,9 @@ class ExerciseRepository(private val exerciseDao: ExerciseDao) {
     suspend fun update(exercise: Exercise) {
         exerciseDao.update(exercise)
     }
+
+    // ✅ New function for synchronous fetch in coroutines
+    suspend fun getExercisesByWorkoutIdSync(workoutId: Long): List<Exercise> {
+        return exerciseDao.getExercisesByWorkoutIdSync(workoutId)
+    }
 }

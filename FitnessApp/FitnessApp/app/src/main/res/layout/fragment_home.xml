@@ -28,6 +28,7 @@
         android:layout_gravity="center"
         android:paddingBottom="8dp"/>
 
+
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewHome"
