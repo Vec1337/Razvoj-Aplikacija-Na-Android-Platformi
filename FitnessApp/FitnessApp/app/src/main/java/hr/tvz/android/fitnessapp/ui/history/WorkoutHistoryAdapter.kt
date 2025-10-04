@@ -15,8 +15,9 @@ class WorkoutHistoryAdapter(private var logs: List<WorkoutLog>) :
     RecyclerView.Adapter<WorkoutHistoryAdapter.HistoryViewHolder>() {
 
     inner class HistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val name = itemView.findViewById<TextView>(R.id.textViewWorkoutName)
-        val time = itemView.findViewById<TextView>(R.id.textViewWorkoutTime)
+        val name: TextView = itemView.findViewById(R.id.textViewWorkoutName)
+        val time: TextView = itemView.findViewById(R.id.textViewWorkoutTime)
+        val completedExercises: TextView = itemView.findViewById(R.id.textViewCompletedExercises) // ✅ new TextView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
@@ -32,6 +33,14 @@ class WorkoutHistoryAdapter(private var logs: List<WorkoutLog>) :
         holder.name.text = log.workoutName
         holder.time.text = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
             .format(Date(log.completedAt))
+
+        // ✅ Show completed exercises (if any)
+        if (!log.completedExercises.isNullOrBlank()) {
+            holder.completedExercises.visibility = View.VISIBLE
+            holder.completedExercises.text = "✔ Completed: ${log.completedExercises}"
+        } else {
+            holder.completedExercises.visibility = View.GONE
+        }
     }
 
     fun updateData(newLogs: List<WorkoutLog>) {

@@ -22,4 +22,8 @@ interface ExerciseDao {
     @Query("SELECT * FROM exercise WHERE workoutId = :workoutId")
     suspend fun getExercisesByWorkoutIdSync(workoutId: Long): List<Exercise>
 
+
+    @Query("SELECT * FROM exercise WHERE workoutId = :workoutId")
+    suspend fun getExercisesByWorkoutIdNow(workoutId: Long): List<Exercise>
+
 }

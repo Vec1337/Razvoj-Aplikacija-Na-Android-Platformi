@@ -10,7 +10,7 @@ import hr.tvz.android.fitnessapp.data.model.Exercise
 import hr.tvz.android.fitnessapp.data.model.Workout
 import hr.tvz.android.fitnessapp.data.model.WorkoutLog
 
-@Database(entities = [Workout::class, Exercise::class, WorkoutLog::class], version = 3, exportSchema = false)
+@Database(entities = [Workout::class, Exercise::class, WorkoutLog::class], version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun workoutDao(): WorkoutDao

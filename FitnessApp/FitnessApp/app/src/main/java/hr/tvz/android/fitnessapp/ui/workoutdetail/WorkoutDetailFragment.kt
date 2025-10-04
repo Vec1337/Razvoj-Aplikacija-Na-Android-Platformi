@@ -91,7 +91,6 @@ class WorkoutDetailFragment : Fragment() {
         // 🔹 Swipe-to-delete for exercises
         val itemTouchHelper = ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-
             override fun onMove(
                 recyclerView: androidx.recyclerview.widget.RecyclerView,
                 viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
@@ -141,16 +140,29 @@ class WorkoutDetailFragment : Fragment() {
             lifecycleScope.launch {
                 val workout = workoutRepository.getWorkoutById(workoutId)
                 if (workout != null) {
-                    // ✅ Log workout
+                    // ✅ Get all exercises
+                    val exercises = exerciseRepository.getExercisesByWorkoutIdSync(workoutId)
+
+                    // ✅ Filter completed ones
+                    val completedExercises = exercises.filter { it.isCompleted }
+
+                    // ✅ Build a nice log string
+                    val completedText = if (completedExercises.isNotEmpty()) {
+                        completedExercises.joinToString(", ") { it.name }
+                    } else {
+                        "No exercises completed"
+                    }
+
+                    // ✅ Log workout with completed exercises
                     val log = WorkoutLog(
                         workoutId = workoutId,
                         workoutName = workout.name,
-                        duration = workout.duration
+                        duration = workout.duration,
+                        completedExercises = completedText // <- new field
                     )
                     workoutLogRepository.insert(log)
 
                     // ✅ Reset all exercises to uncompleted
-                    val exercises = exerciseRepository.getExercisesByWorkoutIdSync(workoutId)
                     exercises.forEach { ex ->
                         exerciseRepository.update(ex.copy(isCompleted = false))
                     }
@@ -161,6 +173,7 @@ class WorkoutDetailFragment : Fragment() {
                 }
             }
         }
+
     }
 
     private fun showAddExerciseDialog(workoutId: Long) {

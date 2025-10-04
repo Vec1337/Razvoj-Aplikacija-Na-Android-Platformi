@@ -30,4 +30,8 @@ class ExerciseRepository(private val exerciseDao: ExerciseDao) {
     suspend fun getExercisesByWorkoutIdSync(workoutId: Long): List<Exercise> {
         return exerciseDao.getExercisesByWorkoutIdSync(workoutId)
     }
+
+    suspend fun getExercisesByWorkoutIdNow(workoutId: Long): List<Exercise> {
+        return exerciseDao.getExercisesByWorkoutIdNow(workoutId)
+    }
 }

@@ -1,6 +1,7 @@
 package hr.tvz.android.fitnessapp.ui.history
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import hr.tvz.android.fitnessapp.data.model.WorkoutLog
@@ -30,7 +31,19 @@ class WorkoutLogAdapter(var logs: List<WorkoutLog>) :
         holder.binding.textViewWorkoutTime.text = sdf.format(date)
 
         holder.binding.textViewDuration.text = "${log.duration} min"
+
+        // ✅ Show completed exercises as a bullet list
+        if (!log.completedExercises.isNullOrBlank()) {
+            holder.binding.textViewCompletedExercises.visibility = View.VISIBLE
+
+            // Split by comma and add bullets
+            val exercisesList = log.completedExercises.split(",").joinToString("\n") { "• ${it.trim()}" }
+            holder.binding.textViewCompletedExercises.text = exercisesList
+        } else {
+            holder.binding.textViewCompletedExercises.visibility = View.GONE
+        }
     }
+
 
     override fun getItemCount(): Int = logs.size
 

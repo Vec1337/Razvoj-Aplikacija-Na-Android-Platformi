@@ -10,5 +10,6 @@ data class WorkoutLog(
     val workoutId: Long,
     val workoutName: String,
     val completedAt: Long = System.currentTimeMillis(), // timestamp
-    val duration: Int = 0 // optional: store duration in minutes
+    val duration: Int = 0, // optional: store duration in minutes
+    val completedExercises: String? = null
 )
