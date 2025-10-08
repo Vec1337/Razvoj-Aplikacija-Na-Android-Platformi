@@ -11,7 +11,7 @@ import hr.tvz.android.fitnessapp.R
 class ReminderReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         val builder = NotificationCompat.Builder(context, FitnessApp.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_fitness) // Replace with your drawable
+            .setSmallIcon(R.drawable.ic_fitness)
             .setContentTitle("Time to work out!")
             .setContentText("Don't forget to log your workout today.")
             .setPriority(NotificationCompat.PRIORITY_HIGH)

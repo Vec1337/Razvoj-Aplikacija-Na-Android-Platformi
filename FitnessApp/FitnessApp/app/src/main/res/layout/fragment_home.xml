@@ -6,7 +6,6 @@
     android:gravity="center"
     android:padding="16dp">
 
-    <!-- Header -->
     <TextView
         android:id="@+id/textViewHeader"
         android:layout_width="wrap_content"
@@ -17,7 +16,6 @@
         android:layout_gravity="center"
         android:paddingBottom="8dp"/>
 
-    <!-- Empty message -->
     <TextView
         android:id="@+id/textViewEmpty"
         android:layout_width="wrap_content"
@@ -28,8 +26,6 @@
         android:layout_gravity="center"
         android:paddingBottom="8dp"/>
 
-
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewHome"
         android:layout_width="match_parent"

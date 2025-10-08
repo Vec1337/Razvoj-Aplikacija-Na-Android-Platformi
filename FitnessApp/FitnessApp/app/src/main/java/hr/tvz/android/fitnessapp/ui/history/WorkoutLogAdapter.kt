@@ -24,6 +24,7 @@ class WorkoutLogAdapter(var logs: List<WorkoutLog>) :
 
     override fun onBindViewHolder(holder: LogViewHolder, position: Int) {
         val log = logs[position]
+
         holder.binding.textViewWorkoutName.text = log.workoutName
 
         val date = Date(log.completedAt)
@@ -32,18 +33,19 @@ class WorkoutLogAdapter(var logs: List<WorkoutLog>) :
 
         holder.binding.textViewDuration.text = "${log.duration} min"
 
-        // ✅ Show completed exercises as a bullet list
         if (!log.completedExercises.isNullOrBlank()) {
             holder.binding.textViewCompletedExercises.visibility = View.VISIBLE
 
-            // Split by comma and add bullets
-            val exercisesList = log.completedExercises.split(",").joinToString("\n") { "• ${it.trim()}" }
+            val exercisesList = log.completedExercises
+                .split("\n", ",")
+                .filter { it.isNotBlank() }
+                .joinToString("\n") { "• ${it.trim()}" }
+
             holder.binding.textViewCompletedExercises.text = exercisesList
         } else {
             holder.binding.textViewCompletedExercises.visibility = View.GONE
         }
     }
-
 
     override fun getItemCount(): Int = logs.size
 

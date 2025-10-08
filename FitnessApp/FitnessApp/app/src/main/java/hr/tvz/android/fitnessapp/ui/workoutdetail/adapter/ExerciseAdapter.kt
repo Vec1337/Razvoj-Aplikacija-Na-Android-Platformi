@@ -13,10 +13,8 @@ class ExerciseAdapter(
     var exercises: List<Exercise>
 ) : RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
 
-    // 🔹 Callback for long-click (edit)
     var onExerciseLongClick: ((Exercise) -> Unit)? = null
 
-    // 🔹 Callback for normal click (toggle completed)
     var onExerciseClick: ((Exercise) -> Unit)? = null
 
     inner class ExerciseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,10 +35,15 @@ class ExerciseAdapter(
 
     override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
         val exercise = exercises[position]
-        holder.nameText.text = exercise.name
-        holder.setsRepsText.text = "${exercise.sets} sets x ${exercise.reps} reps"
 
-        // ✅ Show completed state visually (strike-through if completed)
+        holder.nameText.text = exercise.name
+
+        holder.setsRepsText.text = if (exercise.weight > 0) {
+            "${exercise.sets} sets x ${exercise.reps} reps  •  ${exercise.weight} kg"
+        } else {
+            "${exercise.sets} sets x ${exercise.reps} reps"
+        }
+
         if (exercise.isCompleted) {
             holder.nameText.paintFlags = holder.nameText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             holder.setsRepsText.paintFlags = holder.setsRepsText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -49,12 +52,10 @@ class ExerciseAdapter(
             holder.setsRepsText.paintFlags = holder.setsRepsText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
 
-        // 🔹 Normal click → toggle completed
         holder.itemView.setOnClickListener {
             onExerciseClick?.invoke(exercise)
         }
 
-        // 🔹 Long click → edit
         holder.itemView.setOnLongClickListener {
             onExerciseLongClick?.invoke(exercise)
             true

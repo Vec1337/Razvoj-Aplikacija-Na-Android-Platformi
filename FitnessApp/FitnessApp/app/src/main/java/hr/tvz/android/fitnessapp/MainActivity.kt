@@ -16,30 +16,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Background music
         mediaPlayer = MediaPlayer.create(this, R.raw.background_music)
         mediaPlayer?.isLooping = true
         mediaPlayer?.start()
 
-        // NavHostFragment & NavController
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        // Bottom Navigation
+
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNav.setupWithNavController(navController)
 
-        // Floating Action Button
         val fabAddWorkout = findViewById<FloatingActionButton>(R.id.fabAddWorkout)
 
-        // Show FAB only on HomeFragment
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            fabAddWorkout.show() // default
+            fabAddWorkout.show()
             if (destination.id != R.id.homeFragment) fabAddWorkout.hide()
         }
 
-        // FAB click navigates to AddWorkoutFragment only if on Home
         fabAddWorkout.setOnClickListener {
             if (navController.currentDestination?.id == R.id.homeFragment) {
                 navController.navigate(R.id.addWorkoutFragment)

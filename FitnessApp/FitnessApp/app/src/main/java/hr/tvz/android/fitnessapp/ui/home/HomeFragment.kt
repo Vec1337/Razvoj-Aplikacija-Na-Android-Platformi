@@ -38,19 +38,15 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize repository
         repository = WorkoutRepository(AppDatabase.getDatabase(requireContext()).workoutDao())
 
-        // Initialize adapter with click listener
         adapter = WorkoutAdapter(emptyList()) { workout ->
             openWorkoutDetail(workout)
         }
 
-        // Setup RecyclerView
         binding.recyclerViewHome.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewHome.adapter = adapter
 
-        // Observe workouts
         repository.allWorkouts.observe(viewLifecycleOwner) { workouts ->
             adapter.updateData(workouts)
 
@@ -63,7 +59,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Swipe-to-delete with anchored Snackbar
         val itemTouchHelper = ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -76,12 +71,10 @@ class HomeFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 val workoutToDelete = adapter.currentList[position]
 
-                // Delete from DB
                 lifecycleScope.launch {
                     repository.delete(workoutToDelete)
                 }
 
-                // Show Undo Snackbar anchored above BottomNavigationView
                 Snackbar.make(requireView(), "Workout deleted", Snackbar.LENGTH_LONG)
                     .setAnchorView(R.id.bottom_navigation) // pass resource ID to avoid ambiguity
                     .setAction("UNDO") {
@@ -95,7 +88,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun openWorkoutDetail(workout: Workout) {
-        // Navigate with Safe Args
         val action = HomeFragmentDirections
             .actionHomeFragmentToWorkoutDetailFragment(workout.id.toLong(), workout.name)
         findNavController().navigate(action)

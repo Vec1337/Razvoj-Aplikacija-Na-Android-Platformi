@@ -18,8 +18,6 @@ interface WorkoutDao {
     @Delete
     suspend fun delete(workout: Workout)
 
-
-    // Update an existing workout (e.g., exerciseCount, duration)
     @Update
     suspend fun update(workout: Workout)
 

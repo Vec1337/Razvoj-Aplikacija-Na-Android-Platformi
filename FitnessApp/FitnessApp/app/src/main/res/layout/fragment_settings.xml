@@ -1,29 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     android:padding="24dp">
 
-    <Button
-        android:id="@+id/buttonSetReminder"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Set Daily Reminder" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-    <Button
-        android:id="@+id/buttonTestNotification"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Test Notification"
-        android:layout_marginTop="16dp"/>
+        <Button
+            android:id="@+id/buttonSetReminder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/purple_500"
+            android:text="⏰ Set Daily Reminder"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:padding="12dp"/>
 
-    <Switch
-        android:id="@+id/switchMusic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Background Music" />
+        <Button
+            android:id="@+id/buttonTestNotification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/purple_500"
+            android:text="🔔 Test Notification"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:padding="12dp" />
 
+        <Button
+            android:id="@+id/buttonFeatures"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_500"
+            android:text="✨ App Features"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:padding="12dp" />
 
-</LinearLayout>
+        <Switch
+            android:id="@+id/switchMusic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="🎵 Background Music"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</ScrollView>

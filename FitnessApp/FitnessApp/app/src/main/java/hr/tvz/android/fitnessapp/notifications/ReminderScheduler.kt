@@ -23,16 +23,17 @@ object ReminderScheduler {
             set(Calendar.SECOND, 0)
         }
 
-        // If selected time already passed, schedule for next day
+        // If the time has already passed today, schedule for tomorrow
         if (calendar.timeInMillis < System.currentTimeMillis()) {
             calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
 
-        alarmManager.setRepeating(
+        // More reliable than setRepeating on modern Android
+        alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
             pendingIntent
         )
     }
 }
+

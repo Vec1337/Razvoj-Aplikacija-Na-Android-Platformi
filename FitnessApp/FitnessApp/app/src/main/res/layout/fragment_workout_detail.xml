@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- Workout Name -->
     <TextView
         android:id="@+id/textViewWorkoutName"
         android:layout_width="0dp"
@@ -18,7 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Add Exercise Button -->
     <Button
         android:id="@+id/buttonAddExercise"
         android:layout_width="wrap_content"
@@ -26,9 +24,10 @@
         android:text="Add Exercise"
         app:layout_constraintTop_toBottomOf="@id/textViewWorkoutName"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/purple_500"
+        android:textColor="@color/white"/>
 
-    <!-- RecyclerView for Exercises -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewExercises"
         android:layout_width="0dp"
@@ -40,7 +39,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"/>
 
-    <!-- Complete / Log Workout Button -->
     <Button
         android:id="@+id/buttonCompleteWorkout"
         android:layout_width="0dp"
@@ -49,6 +47,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="50dp"/>
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="@color/purple_500"
+        android:textColor="@color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

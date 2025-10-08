@@ -38,12 +38,10 @@ class WorkoutHistoryFragment : Fragment() {
 
         val repository = AppDatabase.getDatabase(requireContext()).workoutLogDao()
 
-        // Observe workout logs
         repository.getAllLogs().observe(viewLifecycleOwner) { logs ->
             adapter.updateData(logs)
         }
 
-        // Swipe-to-delete
         val itemTouchHelper = ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
@@ -57,12 +55,10 @@ class WorkoutHistoryFragment : Fragment() {
                 val position = viewHolder.adapterPosition
                 val logToDelete = adapter.logs[position]
 
-                // Delete from DB
                 lifecycleScope.launch {
                     repository.delete(logToDelete)
                 }
 
-                // Show Undo Snackbar above bottom navigation
                 Snackbar.make(requireView(), "Workout log deleted", Snackbar.LENGTH_LONG)
                     .setAnchorView(R.id.bottom_navigation)
                     .setAction("UNDO") {

@@ -75,12 +75,10 @@ class WorkoutDetailFragment : Fragment() {
             adapter.updateData(exercises)
         }
 
-        // 🔹 Long-press edit exercise
         adapter.onExerciseLongClick = { exercise ->
             showEditExerciseDialog(exercise)
         }
 
-        // 🔹 Click exercise → toggle completed
         adapter.onExerciseClick = { exercise ->
             val toggledExercise = exercise.copy(isCompleted = !exercise.isCompleted)
             lifecycleScope.launch {
@@ -88,7 +86,6 @@ class WorkoutDetailFragment : Fragment() {
             }
         }
 
-        // 🔹 Swipe-to-delete for exercises
         val itemTouchHelper = ItemTouchHelper(object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -140,29 +137,31 @@ class WorkoutDetailFragment : Fragment() {
             lifecycleScope.launch {
                 val workout = workoutRepository.getWorkoutById(workoutId)
                 if (workout != null) {
-                    // ✅ Get all exercises
+
                     val exercises = exerciseRepository.getExercisesByWorkoutIdSync(workoutId)
 
-                    // ✅ Filter completed ones
                     val completedExercises = exercises.filter { it.isCompleted }
 
-                    // ✅ Build a nice log string
                     val completedText = if (completedExercises.isNotEmpty()) {
-                        completedExercises.joinToString(", ") { it.name }
+                        completedExercises.joinToString("\n") { ex ->
+                            if (ex.weight > 0) {
+                                "${ex.name} - ${ex.sets}x${ex.reps} @ ${ex.weight}kg"
+                            } else {
+                                "${ex.name} - ${ex.sets}x${ex.reps}"
+                            }
+                        }
                     } else {
                         "No exercises completed"
                     }
 
-                    // ✅ Log workout with completed exercises
                     val log = WorkoutLog(
                         workoutId = workoutId,
                         workoutName = workout.name,
                         duration = workout.duration,
-                        completedExercises = completedText // <- new field
+                        completedExercises = completedText
                     )
                     workoutLogRepository.insert(log)
 
-                    // ✅ Reset all exercises to uncompleted
                     exercises.forEach { ex ->
                         exerciseRepository.update(ex.copy(isCompleted = false))
                     }
@@ -183,6 +182,7 @@ class WorkoutDetailFragment : Fragment() {
         val nameEdit = dialogView.findViewById<EditText>(R.id.editTextExerciseName)
         val setsEdit = dialogView.findViewById<EditText>(R.id.editTextSets)
         val repsEdit = dialogView.findViewById<EditText>(R.id.editTextReps)
+        val weightEdit = dialogView.findViewById<EditText>(R.id.editTextWeight)
 
         AlertDialog.Builder(requireContext())
             .setTitle("Add Exercise")
@@ -191,6 +191,7 @@ class WorkoutDetailFragment : Fragment() {
                 val name = nameEdit.text.toString()
                 val sets = setsEdit.text.toString().toIntOrNull() ?: 0
                 val reps = repsEdit.text.toString().toIntOrNull() ?: 0
+                val weight = weightEdit.text.toString().toIntOrNull() ?: 0
 
                 if (name.isNotBlank() && sets > 0 && reps > 0) {
                     val exercise = Exercise(
@@ -198,6 +199,7 @@ class WorkoutDetailFragment : Fragment() {
                         name = name,
                         sets = sets,
                         reps = reps,
+                        weight = weight,
                         isCompleted = false
                     )
 
@@ -226,11 +228,12 @@ class WorkoutDetailFragment : Fragment() {
         val nameEdit = dialogView.findViewById<EditText>(R.id.editTextExerciseName)
         val setsEdit = dialogView.findViewById<EditText>(R.id.editTextSets)
         val repsEdit = dialogView.findViewById<EditText>(R.id.editTextReps)
+        val weightEdit = dialogView.findViewById<EditText>(R.id.editTextWeight)
 
-        // Pre-fill existing values
         nameEdit.setText(exercise.name)
         setsEdit.setText(exercise.sets.toString())
         repsEdit.setText(exercise.reps.toString())
+        weightEdit.setText(exercise.weight.toString())
 
         AlertDialog.Builder(requireContext())
             .setTitle("Edit Exercise")
@@ -239,9 +242,10 @@ class WorkoutDetailFragment : Fragment() {
                 val name = nameEdit.text.toString()
                 val sets = setsEdit.text.toString().toIntOrNull() ?: 0
                 val reps = repsEdit.text.toString().toIntOrNull() ?: 0
+                val weight = weightEdit.text.toString().toIntOrNull() ?: 0
 
                 if (name.isNotBlank() && sets > 0 && reps > 0) {
-                    val updatedExercise = exercise.copy(name = name, sets = sets, reps = reps)
+                    val updatedExercise = exercise.copy(name = name, sets = sets, reps = reps, weight = weight)
                     lifecycleScope.launch {
                         exerciseRepository.update(updatedExercise)
                     }

@@ -40,10 +40,9 @@ class AddWorkoutFragment : Fragment() {
             if (name.isNotBlank() && duration > 0) {
                 val workout = Workout(name = name, duration = duration)
 
-                // Launch a coroutine to call the suspend function
                 lifecycleScope.launch {
                     repository.insert(workout)
-                    parentFragmentManager.popBackStack() // Close fragment after saving
+                    parentFragmentManager.popBackStack()
                 }
             } else {
                 Toast.makeText(requireContext(), "Enter valid values", Toast.LENGTH_SHORT).show()
